@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import CreateTodo from "./component/CreateTodoList.js";
+import ShowTodo from "./component/ShowTodo.js";
+import React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function App() {
+  let [todo, setTodo] = useState([]);
+
+  const getData = async () => {
+    try {
+      let getData = await axios.get("http://localhost:5000/todo-list");
+      setTodo(getData.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1 className=" text-center text-3xl font-mono mt-3 font-extrabold ">
+        Todo List
+      </h1>
+      <div className=" flex flex-row justify-center gap-[80px] ">
+        <CreateTodo getData={getData} />
+        <ShowTodo todo={todo} getData={getData} />
+      </div>
     </div>
   );
 }
